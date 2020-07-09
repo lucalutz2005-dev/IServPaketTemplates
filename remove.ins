@@ -1,0 +1,30 @@
+[Initial]
+Message=Deinstalliere Siemens NX 10...
+DefVar $ExitCode$
+
+[Actions]
+ShowBitmap "%ScriptPath%\logo.png" "Siemens NX 10"
+Sub_Uninstall
+
+[Sub_Uninstall]
+if FileExists("C:\Program Files\Siemens\NX 10.0\UGII\ugraf.exe")
+    Files_Mount
+    WinBatch_Uninstall
+    Sub_HandleExitCode
+endif
+
+[Files_Mount]
+ChangeDirectory "%SCRIPTPATH%"
+addpath pre "%ScriptPath%\DATA\"
+
+[WinBatch_Uninstall]
+.\remove.exe "%ScriptPath%\DATA\setup.exe"
+
+[Sub_HandleExitCode]
+; check return code
+Set $ExitCode$ = GetLastExitCode
+comment "GetLastExitCode: " + $ExitCode$
+if not($ExitCode$ = "0")
+    LogError "Fatal: setup returned exit code " + $ExitCode$
+    IsFatalError
+endif

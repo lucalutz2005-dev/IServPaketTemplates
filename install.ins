@@ -1,0 +1,40 @@
+[Initial]
+Message=Installiere Siemens NX 10...
+DefVar $ExitCode$
+DefVar $Licence$
+DefVar $MinimumSpace$
+
+[Actions]
+ShowBitmap "%ScriptPath%\logo.png" "Siemens NX 10"
+Sub_PrepareSetup
+Files_Copy
+WinBatch_Setup
+Sub_HandleExitCode
+Files_Cleanup
+
+[Sub_PrepareSetup]
+Set $Licence$ = GetProductProperty("lizenzserver", "")
+if ($Licence$ = "")
+  LogError "Fatal! Product key not found!"
+  IsFatalError
+endif
+
+
+[Files_Copy]
+copy -se "%ScriptPath%\DATA\PATCH\*" "%opsiTmpDir%\siemens-nx-10\"
+
+[WinBatch_Setup]
+"%ScriptDrive%\tools\AutoIt3.exe" "%ScriptPath%\install.au3" "%ScriptPath%\DATA\setup.exe" "$Licence$"
+"%opsiTmpDir%\%installingProdName%\PATCH\ugs_update.bat" /d
+
+[Sub_HandleExitCode]
+; check return code
+Set $ExitCode$ = GetLastExitCode
+comment "GetLastExitCode: " + $ExitCode$
+if not($ExitCode$ = "0")
+    LogError "Fatal: setup returned exit code " + $ExitCode$
+    IsFatalError
+endif
+
+[Files_Cleanup]
+delete -sf "%opsiTmpDir%\siemens-nx-10\"

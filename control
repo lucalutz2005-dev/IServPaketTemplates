@@ -1,0 +1,17 @@
+[Product]
+type: localboot
+id: siemens-nx-10
+name: Siemens NX 10
+description: NX ist ein interaktives CAD/CAM/CAE-System.
+advice: Das Programm benötigt eine Lizenz, andernfalls startet das Programm nicht.
+version: 10.0.3
+packageVersion: 1.0
+setupScript: install.ins
+uninstallScript: remove.ins
+licenseRequired: true
+
+[ProductProperty]
+name: lizenzserver
+description: Lizenzserver
+pattern: 8000@127.0.0.1
+helptext: Der Lizenzserver muss folgendes Fomat aufweisen: Port@IP-Adresse.
